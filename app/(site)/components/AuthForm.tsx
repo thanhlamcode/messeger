@@ -17,7 +17,9 @@ const AuthForm = () => {
     setVariant((prev) => (prev === "LOGIN" ? "REGISTER" : "LOGIN"));
   }, []);
 
-  const socialAction = () => {};
+  const socialAction = (action: String) => {
+    // NextAuth Social Sign in
+  };
 
   const {
     register,
@@ -41,10 +43,6 @@ const AuthForm = () => {
     if (variant === "REGISTER") {
       // axios register logic
     }
-
-    const socialAction = (action: String) => {
-      // NextAuth Social Sign in
-    };
   };
 
   return (
@@ -71,10 +69,11 @@ const AuthForm = () => {
             <Input
               label="Name"
               id="name"
-              type="text" // Sửa thành "text" thay vì "name" cho type
+              type="text"
               required
               error={errors.name}
               register={register}
+              disabled={isLoading}
             />
           )}
 
@@ -85,6 +84,7 @@ const AuthForm = () => {
             required
             error={errors.email}
             register={register}
+            disabled={isLoading}
           />
           <Input
             label="Password"
@@ -93,6 +93,7 @@ const AuthForm = () => {
             required
             error={errors.password}
             register={register}
+            disabled={isLoading}
           />
           <Button disabled={isLoading} fullWidth type="submit">
             {variant === "LOGIN" ? "LOGIN" : "REGISTER"}
@@ -113,26 +114,26 @@ const AuthForm = () => {
           <AuthSocialButton
             icon={BsGithub}
             onClick={() => {
-              socialAction();
+              socialAction("github");
             }}
           />
           <AuthSocialButton
             icon={BsGoogle}
             onClick={() => {
-              socialAction();
+              socialAction("google");
             }}
           />
         </div>
         <div
           className="
-  flex
-  gap-2
-  justify-center
-  text-sm
-  mt-6
-  px-2
-  text-gray-500
-"
+                    flex
+                    gap-2
+                    justify-center
+                    text-sm
+                    mt-6
+                    px-2
+                    text-gray-500
+                  "
         >
           <div>
             {variant === "LOGIN"
