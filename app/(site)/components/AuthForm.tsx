@@ -20,7 +20,19 @@ const AuthForm = () => {
     setVariant((prev) => (prev === "LOGIN" ? "REGISTER" : "LOGIN"));
   }, []);
 
-  const socialAction = (action: String) => {
+  const socialAction = (action: string) => {
+    setLoading(true);
+    signIn(action, { redirect: false })
+      .then((callback) => {
+        if (callback?.error) {
+          toast.error("Invalid Credentials"); // Hiển thị thông báo lỗi nếu có vấn đề
+        }
+
+        if (callback?.ok && !callback?.error) {
+          toast.success("Logged in!"); // Hiển thị thông báo thành công khi đăng nhập thành công
+        }
+      })
+      .finally(() => setLoading(false)); // Tắt trạng thái loading sau khi hoàn tất
     // NextAuth Social Sign in
   };
 
