@@ -7,6 +7,8 @@ import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 import { BsGithub, BsGoogle } from "react-icons/bs";
 import AuthSocialButton from "./AuthSocialButon";
 import axios from "axios";
+import toast from "react-hot-toast";
+import { signIn } from "next-auth/react";
 
 type Variant = "LOGIN" | "REGISTER";
 
@@ -38,11 +40,34 @@ const AuthForm = () => {
     setLoading(true);
 
     if (variant === "LOGIN") {
-      // nextAuth logic for login
+      signIn("credentials", {
+        ...data,
+        redirect: false,
+      })
+        .then((callback) => {
+          if (callback?.error) {
+            toast.error("Invalid credentials"); // Hiển thị lỗi nếu thông tin đăng nhập không chính xác
+          }
+
+          if (callback?.ok && !callback?.error) {
+            toast.success("Logged in!"); // Hiển thị thông báo thành công khi đăng nhập thành công
+          }
+        })
+        .finally(() => setLoading(false)); // Tắt trạng thái loading sau khi hoàn tất
     }
 
     if (variant === "REGISTER") {
-      axios.post("/api/register", data);
+      axios
+        .post("/api/register", data)
+        .then(() => {
+          toast.success("Registration successful!"); // Thông báo thành công khi đăng ký
+        })
+        .catch(() => {
+          toast.error("Something went wrong"); // Thông báo lỗi nếu có vấn đề xảy ra
+        })
+        .finally(() => {
+          setLoading(false); // Đặt trạng thái loading về false sau khi hoàn tất (thành công hoặc thất bại)
+        });
     }
   };
 
