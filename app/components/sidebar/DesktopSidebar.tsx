@@ -1,12 +1,31 @@
 "use client";
 
 import useRoutes from "@/app/hooks/useRoutes";
-import { useState } from "react";
+import React, { useState } from "react";
 import DesktopItem from "./DesktopItem";
+import { User } from "@prisma/client";
+import Avatar from "../Avatar";
 
-function DesktopSidebar() {
+interface DesktopSidebarProps {
+  currentUser: {
+    name: string | null;
+    id: string;
+    email: string;
+    emailVerified: Date | null;
+    image: string | null;
+    hashedPassword: string | null;
+    createdAt: Date;
+    updatedAt: Date;
+    conversationIds: string[];
+    seenMessageIds: string[];
+  } | null;
+}
+
+const DesktopSidebar: React.FC<DesktopSidebarProps> = ({ currentUser }) => {
   const router = useRoutes();
   const [isOpen, setIsOpen] = useState(false);
+
+  console.log(currentUser);
   return (
     <>
       <div
@@ -56,9 +75,17 @@ function DesktopSidebar() {
             ))}
           </ul>
         </nav>
+        <nav className="mt-4 flex flex-col justify-between items-center">
+          <div
+            onClick={() => setIsOpen(true)}
+            className="cursor-pointer hover:opacity-75 transition"
+          >
+            {currentUser ? <Avatar user={currentUser} /> : <p>Loading...</p>}
+          </div>
+        </nav>
       </div>
     </>
   );
-}
+};
 
 export default DesktopSidebar;
